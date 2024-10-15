@@ -1,0 +1,179 @@
+.container-fluid {
+  padding: 0; /* Loại bỏ padding mặc định */
+  margin: 0 auto;
+  width: 100%;
+  max-width: 100%; /* Đảm bảo container chiếm toàn bộ chiều rộng */
+}
+
+.category-carousel {
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+
+.category-item {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-card {
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.profile-card:hover {
+  transform: scale(1.05);
+}
+
+.profile-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+  object-fit: cover; /* Đảm bảo ảnh không bị méo */
+}
+
+.profile-info {
+  text-align: center;
+}
+
+.profile-info h3 {
+  margin: 10px 0 5px;
+  font-size: 20px;
+  color: #333;
+}
+
+.profile-info p {
+  margin: 0;
+  font-size: 16px;
+  color: #666;
+}
+
+/* Mũi tên điều hướng với màu nền */
+.category-carousel .slick-prev,
+.category-carousel .slick-next {
+  width: 40px;
+  height: 40px;
+
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.category-carousel .slick-prev:before,
+.category-carousel .slick-next:before {
+  font-size: 20px;
+  color: #E7E9ED;
+}
+
+.category-carousel .slick-prev:hover,
+.category-carousel .slick-next:hover {
+  background-color: #828282;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .profile-card {
+    max-width: 250px;
+    padding: 15px;
+  }
+
+  .profile-image {
+    width: 80px;
+    height: 80px;
+  }
+
+  .profile-info h3 {
+    font-size: 18px;
+  }
+
+  .profile-info p {
+    font-size: 14px;
+  }
+
+  .category-carousel .slick-prev,
+  .category-carousel .slick-next {
+    width: 35px;
+    height: 35px;
+  }
+
+  .category-carousel .slick-prev:before,
+  .category-carousel .slick-next:before {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-card {
+    max-width: 200px;
+    padding: 10px;
+  }
+
+  .profile-image {
+    width: 70px;
+    height: 70px;
+  }
+
+  .profile-info h3 {
+    font-size: 16px;
+  }
+
+  .profile-info p {
+    font-size: 12px;
+  }
+
+  .category-carousel .slick-prev,
+  .category-carousel .slick-next {
+    width: 30px;
+    height: 30px;
+  }
+
+  .category-carousel .slick-prev:before,
+  .category-carousel .slick-next:before {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-card {
+    max-width: 150px;
+    padding: 5px;
+  }
+
+  .profile-image {
+    width: 60px;
+    height: 60px;
+  }
+
+  .profile-info h3 {
+    font-size: 14px;
+  }
+
+  .profile-info p {
+    font-size: 10px;
+  }
+
+  .category-carousel .slick-prev,
+  .category-carousel .slick-next {
+    width: 25px;
+    height: 25px;
+  }
+
+  .category-carousel .slick-prev:before,
+  .category-carousel .slick-next:before {
+    font-size: 12px;
+  }
+}

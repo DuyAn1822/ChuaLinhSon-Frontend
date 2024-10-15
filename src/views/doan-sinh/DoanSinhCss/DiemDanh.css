@@ -1,0 +1,122 @@
+.checkbox-con {
+    display: inline-flex;
+}
+
+.checkbox-con input[type="checkbox"] {
+    appearance: none;
+    width: 48px;
+    height: 23px;
+    border: 2px solid #ff0000;
+    border-radius: 20px;
+    background: #f1e1e1;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+}
+
+.checkbox-con input[type="checkbox"]::before {
+    content: "";
+    width: 14px;
+    height: 14px;
+    background: rgba(234, 7, 7, 0.5);
+    border: 2px solid #ea0707;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    transform: translateY(-50%);
+    transition: all 0.3s ease-in-out;
+}
+
+.checkbox-con input[type="checkbox"]:checked::before {
+    background: rgba(2, 194, 2, 0.5);
+    border: 2px solid #02c202;
+    transform: translate(25px, -50%);
+}
+
+.checkbox-con input[type="checkbox"]:checked {
+    border-color: #02c202;
+    background: #e2f1e1;
+}
+
+.checkbox-con input[type="checkbox"]::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    width: 12px;
+    height: 12px;
+    background-color: transparent;
+    transform: translate(-50%, -50%);
+}
+
+.checkbox-con input[type="checkbox"]:checked::after {
+    content: '';
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='13' viewBox='0 0 15 13' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M14.8185 0.114533C15.0314 0.290403 15.0614 0.605559 14.8855 0.818454L5.00187 12.5L0.113036 6.81663C-0.0618274 6.60291 -0.0303263 6.2879 0.183396 6.11304C0.397119 5.93817 0.71213 5.96967 0.886994 6.18339L5.00187 11L14.1145 0.181573C14.2904 -0.0313222 14.6056 -0.0613371 14.8185 0.114533Z' fill='%2302C202' fill-opacity='0.9'/%3E%3C/svg%3E");
+    background-size: cover;
+    transform: translate(-50%, -50%);
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+}
+
+.btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rounded-image {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.checkbox-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    /* Adjust spacing between checkboxes */
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    width: calc(33.33% - 7px);
+    /* Three items per row, accounting for gaps */
+    box-sizing: border-box;
+}
+
+.form-check-input {
+    margin-right: 10px;
+    /* Space between checkbox and label */
+}
+
+.form-check-label {
+    flex: 1;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.footer-buttons {
+    display: flex;
+    gap: 10px;
+    /* Adjust spacing between buttons */
+}
+
+.form-check {
+    margin-right: auto;
+    /* Pushes the form-switch to the left */
+}
+
+[disabled] {
+    pointer-events: none; /* Prevents any mouse interactions */
+    cursor: default; /* Shows the default cursor */
+    opacity: 0.5; /* Optional: makes it look disabled */
+}

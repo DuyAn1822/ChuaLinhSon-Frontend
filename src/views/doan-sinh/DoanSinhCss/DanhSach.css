@@ -1,0 +1,57 @@
+#custom-badge {
+  border-radius: 0.25rem;
+  width        : 70px;
+  /* Chiều rộng cố định */
+  /* Bo góc */
+}
+
+.custom-badge-success {
+  background-color: #51CC8A;
+  /* Màu xanh */
+  color           : white;
+  /* Màu chữ */
+}
+
+.custom-badge-danger {
+  background-color: #EF376E;
+  /* Màu đỏ */
+  color           : white;
+  /* Màu chữ */
+}
+
+.custom-badge-secondary {
+  background-color: #6b7785;
+  /* Màu đỏ */
+  color           : white;
+  /* Màu chữ */
+}
+
+.custom-badge-warning {
+  background-color: #EECC00;
+  /* Màu đỏ */
+  color           : white;
+  /* Màu chữ */
+}
+
+.fixed-width-column {
+  white-space  : nowrap;
+  overflow     : hidden;
+  text-overflow: ellipsis;
+}
+.fixed-width-input[type="search"] {
+  min-width: 180px; /* Kích thước tối thiểu */
+  width: 100%; /* Để các ô tìm kiếm chiếm toàn bộ chiều rộng ô cha */
+  box-sizing: border-box; /* Đảm bảo padding và border không làm thay đổi kích thước của ô */
+}
+
+/* Thêm các quy tắc media query để giữ kích thước cố định trên các màn hình nhỏ */
+@media (max-width: 768px) {
+  .fixed-width-input[type="search"] {
+    min-width: 180px; /* Kích thước tối thiểu trên các thiết bị nhỏ hơn */
+  }
+  
+}
+
+.custom-dropdown-item {
+  cursor: pointer;
+}

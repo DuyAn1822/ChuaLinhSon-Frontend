@@ -1,0 +1,60 @@
+.carousel-container {
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+  }
+  
+  .carousel-container img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .carousel-container .slick-dots {
+    position: absolute;
+    bottom: 20px; /* Đặt dots cách đáy của ảnh 20px */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex !important;
+    justify-content: center;
+  }
+  
+  .carousel-container .slick-dots li {
+    margin: 0 5px;
+  }
+  
+  .carousel-container .slick-dots li button:before {
+    font-size: 12px;
+    color: white; /* Màu của các dots */
+  }
+  
+  .carousel-container .slick-dots li.slick-active button:before {
+    color: black; /* Màu của dot khi active */
+  }
+  
+  /* Tùy chỉnh vị trí và kiểu dáng của mũi tên */
+  .carousel-container .slick-prev,
+  .carousel-container .slick-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+
+    border-radius: 50%;
+    z-index: 1;
+  }
+  
+  .carousel-container .slick-prev {
+    left: 10px;
+  }
+  
+  .carousel-container .slick-next {
+    right: 10px;
+  }
+  
+  .carousel-container .slick-prev:before,
+  .carousel-container .slick-next:before {
+    font-size: 20px;
+    color: white; /* Màu của biểu tượng mũi tên */
+  }
+  

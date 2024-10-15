@@ -1,0 +1,108 @@
+.modal-title {
+    text-align: center;
+    width: 100%;
+  }
+  
+  .avatar-container {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .user-avatar {
+    width: 100px;
+    border-radius: 50%;
+  }
+  
+  .user-name, .user-email {
+    text-align: center;
+    margin: 0;
+  }
+  
+  .user-name {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  /* Font */
+  :root {
+    --text-color: #333; /* Default text color for light mode */
+    --background-color: #fff; /* Default background color for light mode */
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --text-color: #fff; /* Text color for dark mode */
+      --background-color: #000; /* Background color for dark mode */
+    }
+  }
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    font-weight: bold;
+    margin: 5px;
+  }
+  
+  .radio-group {
+    display: flex;
+    align-items: center;
+  }
+  
+  .radio-inline {
+    margin-right: 20px;
+  }
+  
+  .radio-inline input {
+    margin-right: 5px;
+  }
+  
+  .bold-text {
+  font-weight: bold;
+  }
+  .checkbox-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Adjust spacing between checkboxes */
+  }
+  
+  .form-check {
+    display: flex;
+    align-items: center;
+    width: calc(33.33% - 7px); /* Three items per row, accounting for gaps */
+    box-sizing: border-box;
+  }
+  
+  .form-check-input {
+    margin-right: 10px; /* Space between checkbox and label */
+  }
+  
+  .form-check-label {
+    flex: 1;
+  }
+  
+  
+  .footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .footer-buttons {
+    display: flex;
+    gap: 10px; /* Adjust spacing between buttons */
+  }
+  
+  .form-check {
+    margin-right: auto; /* Pushes the form-switch to the left */
+  }
+  .custom-badge-success {
+    background-color: #51CC8A; /* Màu xanh */
+    color: white; /* Màu chữ */
+  }
+  
+  .custom-badge-danger {
+    background-color: #EF376E; /* Màu đỏ */
+    color: white; /* Màu chữ */
+  }

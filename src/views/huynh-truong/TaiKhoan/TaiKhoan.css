@@ -1,0 +1,28 @@
+
+#custom-badge {
+    border-radius: 0.25rem;
+    width: 70px; /* Chiều rộng cố định */ /* Bo góc */
+}
+.custom-badge-success {
+    background-color: #51CC8A; /* Màu xanh */
+    color: white; /* Màu chữ */
+  }
+  
+  .custom-badge-danger {
+    background-color: #EF376E; /* Màu đỏ */
+    color: white; /* Màu chữ */
+  }
+  .custom-badge-secondary {
+    background-color: #6b7785; /* Màu đỏ */
+    color: white; /* Màu chữ */
+  }
+  .custom-badge-warning {
+    background-color: #EECC00; /* Màu đỏ */
+    color: white; /* Màu chữ */
+  }
+  
+  .card {
+    background: var(--surface-card);
+    border-radius: 10px;
+    margin-bottom: 1rem;
+  }
