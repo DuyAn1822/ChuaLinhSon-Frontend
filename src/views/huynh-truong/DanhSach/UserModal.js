@@ -195,7 +195,7 @@ function UserModal({ show, handleClose, user, handleChangeHuynhTruong }) {
 
 
   const handleSave = async () => {
-    console.log('Saving user:', formData);
+    // console.log('Saving user:', formData);
     // return;
     if (!validateForm()) return;
 

@@ -31,8 +31,9 @@ const Login = () => {
     if (token && expiryTime && now < expiryTime) {
       navigate('/')
     } else {
-      localStorage.removeItem('token')
-      localStorage.removeItem('tokenExpiry')
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('tokenExpiry');
     }
   }, [navigate]);
 
