@@ -34,6 +34,7 @@ const DDNganhThanh = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [show, setShow] = useState(false);
     const [isHuynhTruong, setIsHuynhTruong] = useState();
+    const [filename, setFilename] = useState('DiemDanhNganhThanh.xlsx');
 
     useEffect(() => {
         getLichSinhHoatDoan();
@@ -278,6 +279,71 @@ const DDNganhThanh = () => {
         }
     }
 
+    const handleDownloadExtract = async () => {
+        try {
+          // Hiển thị Swal với trạng thái đang tải
+          Swal.fire({
+            title: 'Đang tạo file...',
+            text: 'Vui lòng chờ trong giây lát.',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading(); // Hiển thị icon loading
+            },
+          });
+    
+          // Gọi API với các tham số
+          const response = await apiClient.get('/api/export-excel/danh-sach-diem-danh', {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+            params: {
+              filename: filename,
+              doan_id:'5',
+              year: selectedYear
+            },
+            responseType: 'arraybuffer',
+          });
+    
+          // Tạo Blob từ dữ liệu phản hồi
+          const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+          const url = URL.createObjectURL(blob);
+    
+          // Tạo phần tử liên kết để tải file
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename; // Sử dụng tên tệp mà bạn muốn đặt
+          document.body.appendChild(a); // Thêm liên kết vào body
+    
+    
+          Swal.fire({
+            icon: 'success',
+            title: 'File đã sẵn sàng để tải xuống!',
+            confirmButtonText: 'Tải xuống',
+            allowOutsideClick: false, // Không cho phép nhấp ra ngoài để đóng Swal
+            allowEscapeKey: false, // Không cho phép dùng phím Escape để thoát Swal
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Tạo phần tử liên kết để tải file
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = filename; // Sử dụng tên tệp mà bạn muốn đặt
+              document.body.appendChild(a); // Thêm liên kết vào body
+              a.click(); // Nhấp vào liên kết để kích hoạt tải xuống
+              document.body.removeChild(a); // Xóa liên kết khỏi body
+              URL.revokeObjectURL(url); // Giải phóng URL đối tượng
+            }
+          });
+        } catch (error) {
+          console.error('Lỗi khi tải tệp:', error);
+          // Cập nhật Swal khi có lỗi
+          Swal.fire({
+            icon: 'error',
+            title: 'Tải tệp không thành công',
+            text: 'Vui lòng thử lại.',
+          });
+        }
+      };
+
     const handleEditToggle = () => {
         setIsEditing(!isEditing);
     }
@@ -383,6 +449,7 @@ const DDNganhThanh = () => {
                         ))}
                     </CFormSelect>
                     <CButton variant="outline" color="info" onClick={addLichSinhHoatDoan}>Thêm</CButton>
+                    <CButton variant="outline" color="info" onClick={handleDownloadExtract} style={{ marginRight: "5px" }}>Excel</CButton>
                 </CCol>
             </CRow>
 
