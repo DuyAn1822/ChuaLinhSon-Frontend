@@ -438,13 +438,6 @@ function InsertModal({ show, handleClose, onAddDoanSinh }) {
                   onChange={handleInputChange}
                 />
 
-                <label htmlFor="email">Email</label>
-                <input
-                  name="email" className="form-control"
-                  type="email" value={email}
-                  onChange={handleInputChange}
-                />
-
                 <label htmlFor="noiSinh">Nơi Sinh</label>
                 <input
                   name="noiSinh" className="form-control"

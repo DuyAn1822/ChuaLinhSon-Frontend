@@ -79,6 +79,7 @@ const DSNganhThanh = () => {
           sdtMe: item.sdtMe,
           ngayPhatNguyen: item.ngayPhatNguyen,
           noiSinh: item.noiSinh,
+          avatar: item.avatar
         };
       }));
 

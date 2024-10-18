@@ -291,14 +291,24 @@ function UserModal({ show, handleClose, user, handleChangeDoanSinh }) {
         noiSinh: formData.noiSinh,
       };
 
-      // console.log('Update data:', updateData);
 
-      // console.log('Update data:', updateData);
-      // return; 
-      const response = await apiClient.put(`/api/users/${updateData.userId}`, updateData,);
+      
+    // Gửi API cập nhật thông tin người dùng
+    const response = await apiClient.put(`/api/users/${updateData.userId}`, updateData);
 
-      if (response.status) {
-        // Thông báo thành công
+    // Kiểm tra xem có file ảnh để upload không
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      // Gửi API upload ảnh
+      const uploadResponse = await apiClient.post(`/api/files/images/upload?userId=${updateData.userId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      }
         Swal.fire({
           title: 'Thành công!',
           text: 'Cập nhật thông tin người dùng thành công!',
@@ -308,9 +318,7 @@ function UserModal({ show, handleClose, user, handleChangeDoanSinh }) {
         });
         handleChangeDoanSinh();
         handleClose(); // Đóng modal sau khi lưu thành công
-      } else {
-        console.error('Failed to update user');
-      }
+     
     } catch (error) {
       console.error('Error updating user:', error);
     }
