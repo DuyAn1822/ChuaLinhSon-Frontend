@@ -325,7 +325,9 @@ const QuyGD = () => {
         ''
     ], [searchName, selectedNgayThem]);
 
-
+    const formatCurrency = (value) => {
+        return value.toLocaleString('de-DE', { maximumFractionDigits: 3});
+    };
 
     const renderRow = useCallback((fund) => (
         <>
@@ -335,7 +337,7 @@ const QuyGD = () => {
                 <div style={{ display: 'inline-flex' }}>
                     <div style={{ marginRight: '5px' }}>
                         <span style={{ color: fund.thuOrChi ? 'green' : 'red' }}>
-                            {(fund.thuOrChi) ? '+' : '-'}{fund.soTien}
+                            {(fund.thuOrChi) ? '+' : '-'}{formatCurrency(fund.soTien)}
                         </span>
                     </div>
                     <div><span>VNĐ</span></div>
@@ -379,9 +381,9 @@ const QuyGD = () => {
     return (
         <div className="container-fluid">
             <WidgetsBrand
-                totalAmount={fundData2.totalAmount}
-                totalIncome={fundData2.totalIncome}
-                totalExpense={fundData2.totalExpense}
+                totalAmount={formatCurrency(fundData2.totalAmount)}
+                totalIncome={formatCurrency(fundData2.totalAmount)}
+                totalExpense={formatCurrency(fundData2.totalAmount)}
             />
 
             <CRow className="my-3 d-flex">
