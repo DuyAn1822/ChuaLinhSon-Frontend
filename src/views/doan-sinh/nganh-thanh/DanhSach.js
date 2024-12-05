@@ -86,7 +86,7 @@ const DSNganhThanh = () => {
       // Loại bỏ các phần tử null khỏi fetchedData
       const filteredData = fetchedData.filter(item => item !== null);
       setUsersData(filteredData);
-      console.log(filteredData);
+      // console.log(filteredData);
     } catch (error) {
       console.error('Lỗi khi gọi API:', error);
     }
