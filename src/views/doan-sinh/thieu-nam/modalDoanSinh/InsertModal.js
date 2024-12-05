@@ -34,13 +34,14 @@ function InsertModal({ show, handleClose, onAddDoanSinh }) {
   const fileInputRef = useRef(null);
   const [bacHoc, setBacHoc] = useState(0);
   const [bacHocList, setBacHocList] = useState([]);
-  const [ngayKetThucBacHoc, setNgayKetThucBacHoc] = useState('');
+  const [ngayBatDauBacHoc, setNgayBatDauBacHoc] = useState('');
   const [capList, setCapList] = useState([]);
   const [capId, setCapId] = useState(0);
   const [ngayKetThucCap, setNgayKetThucCap] = useState('');
   const [traiHuanLuyenList, setTraiHuanLuyenList] = useState([]);
   const [traiHuanLuyenId, setTraiHuanLuyenId] = useState(0);
-  const [ngayKetThucTraiHuanLuyen, setNgayKetThucTraiHuanLuyen] = useState('');
+  const [latestNgayKetThucTraiHuanLuyen, setlatestNgayKetThucTraiHuanLuyen] = useState('');
+  const [latestNgayBatDauTraiHuanLuyen, setlatestNgayBatDauTraiHuanLuyen] = useState('');
   const [activeItemKey, setActiveItemKey] = useState('thongTin');
 
   useEffect(() => {
@@ -187,15 +188,15 @@ function InsertModal({ show, handleClose, onAddDoanSinh }) {
       case 'traiHuanLuyen':
         setTraiHuanLuyenId(value);
         break;
-      case 'ngayKetThucBacHoc':
-        setNgayKetThucBacHoc(value);
+      case 'ngayBatDauBacHoc':
+        ngayBatDauBacHoc(value);
         break;
-      case 'ngayKetThucCap':
-        setNgayKetThucCap(value);
+      case 'latestNgayKetThucTraiHuanLuyen':
+        setlatestNgayKetThucTraiHuanLuyen(value);
         break;
-      case 'ngayKetThucTraiHuanLuyen':
-        setNgayKetThucTraiHuanLuyen(value);
-        break;
+      case 'latestNgayBatDauTraiHuanLuyen':
+        setlatestNgayBatDauTraiHuanLuyen(value);
+        break; 
       default:
         break;
     }
@@ -229,7 +230,7 @@ function InsertModal({ show, handleClose, onAddDoanSinh }) {
     }
     // Bắt buộc chọn "Ngày kết thúc bậc học" nếu đã chọn "Bậc học"
     if (bacHoc) {
-      if (!ngayKetThucBacHoc) {
+      if (!ngayBatDauBacHoc) {
         newErrors.ngayKetThucBacHoc = 'Ngày kết thúc bậc học là bắt buộc';
         isValid = false;
       }
@@ -244,8 +245,8 @@ function InsertModal({ show, handleClose, onAddDoanSinh }) {
     }
 
     if (traiHuanLuyenId) {
-      if (!ngayKetThucTraiHuanLuyen) {
-        newErrors.ngayKetThucTraiHuanLuyen = 'Ngày kết thúc trại huấn luyện là bắt buộc';
+      if (!latestNgayBatDauTraiHuanLuyen) {
+        newErrors.latestNgayBatDauTraiHuanLuyen = 'Ngày bắt đầu trại huấn luyện là bắt buộc';
         isValid = false;
       }
     }
@@ -287,21 +288,17 @@ function InsertModal({ show, handleClose, onAddDoanSinh }) {
       updatedDate: new Date().toISOString().split('T')[0], // Current date as string
       diaChi: address,
       isActive: true,
-      roleId1: role1 ? { roleId: role1 } : null, // Assume role1 comes from a select input
-      // roleId2: role2 ? { roleId: role2 } : null, // Assume role2 comes from a select input
+      roleId1: role1 ? { roleId: role1 } : null, 
       lichSuHocs: bacHoc ? [{
         bacHocId: Number(bacHoc),
-        ngayKetThuc: ngayKetThucBacHoc
-      }] : null, // Assume bacHoc comes from a select input 
-      // lichSuCapDTOS: capId ? [{
-      //   capId: Number(capId),
-      //   ngayKetThuc: ngayKetThucCap
-      // }] : null, // Assume capId comes from a select input
+        ngayBatDauBacHoc: ngayBatDauBacHoc
+      }] : null, 
       accountDTO: null,
       lichSuTraiHuanLuyenDTOS: traiHuanLuyenId ? [{
         traiHuanLuyenId: Number(traiHuanLuyenId),
-        ngayKetThuc: ngayKetThucTraiHuanLuyen
-      }] : null, // Assume traiHuanLuyenId comes from a select input
+        ngayBatDau: latestNgayBatDauTraiHuanLuyen,
+        ngayKetThuc: latestNgayKetThucTraiHuanLuyen
+      }] : null,
     };
 
 
@@ -372,10 +369,11 @@ function InsertModal({ show, handleClose, onAddDoanSinh }) {
       setNgayKetThucBacHoc('');
       setCapList([]);
       setCapId(0);
-      setNgayKetThucCap('');
+      setNgayBatDauBacHoc('');
       setTraiHuanLuyenList([]);
       setTraiHuanLuyenId(0);
-      setNgayKetThucTraiHuanLuyen('');
+      setlatestNgayKetThucTraiHuanLuyen('');
+      setlatestNgayBatDauTraiHuanLuyen('');
       setNoiSinh('');
       setActiveItemKey('thongTin');
       handleClose();
@@ -565,13 +563,13 @@ function InsertModal({ show, handleClose, onAddDoanSinh }) {
                   ))}
                 </CFormSelect>
 
-                <label htmlFor="ngayKetThucBacHoc">Ngày Kết Thúc Bậc Học</label>
+                <label htmlFor="ngayBatDauBacHoc">Ngày Bắt Đầu Bậc Học</label>
                 <input
-                  id="ngayKetThucBacHoc" name="ngayKetThucBacHoc" className={`form-control ${errors.ngayKetThucBacHoc ? 'is-invalid' : ''}`}
-                  type="date" value={ngayKetThucBacHoc} onChange={handleInputChange} required disabled={bacHoc === 0 || bacHoc === ""}
+                  id="ngayBatDauBacHoc" name="ngayBatDauBacHoc" className={`form-control ${errors.ngayBatDauBacHoc ? 'is-invalid' : ''}`}
+                  type="date" value={ngayBatDauBacHoc} onChange={handleInputChange} required disabled={bacHoc === 0 || bacHoc === ""}
 
                 />
-                {errors.ngayKetThucBacHoc && <div className="invalid-feedback">{errors.ngayKetThucBacHoc}</div>}
+                {errors.ngayBatDauBacHoc && <div className="invalid-feedback">{errors.ngayBatDauBacHoc}</div>}
 
                 <label htmlFor="traiHuanLuyen">Trại Huấn Luyện</label>
                 <CFormSelect
@@ -588,13 +586,24 @@ function InsertModal({ show, handleClose, onAddDoanSinh }) {
                   ))}
                 </CFormSelect>
 
-                <label htmlFor="ngayKetThucTraiHuanLuyen">Ngày Kết Thúc Cấp</label>
-                <input
-                  id="ngayKetThucTraiHuanLuyen" name="ngayKetThucTraiHuanLuyen" className={`form-control ${errors.ngayKetThucTraiHuanLuyen ? 'is-invalid' : ''}`}
-                  type="date" value={ngayKetThucTraiHuanLuyen} onChange={handleInputChange} required disabled={traiHuanLuyenId === 0 || traiHuanLuyenId === ""}
-                />
-                {errors.ngayKetThucTraiHuanLuyen && <div className="invalid-feedback">{errors.ngayKetThucTraiHuanLuyen}</div>}
-
+                <CRow xs={{ gutterX: 5 }}>
+                    <CCol>
+                      <label htmlFor="latestNgayBatDauTraiHuanLuyen">Ngày Bắt Đầu Trại</label>
+                      <input name="latestNgayBatDauTraiHuanLuyen" className={`form-control ${errors.latestNgayBatDauTraiHuanLuyen ? 'is-invalid' : ''}`} type="date"
+                        value={latestNgayBatDauTraiHuanLuyen} onChange={handleInputChange}
+                        disabled={traiHuanLuyenId === 0 || traiHuanLuyenId === ""}
+                      />
+                      {errors.latestNgayBatDauTraiHuanLuyen && <div className="invalid-feedback">{errors.latestNgayBatDauTraiHuanLuyen}</div>}
+                    </CCol>
+                    <CCol>
+                      <label htmlFor="latestNgayKetThucTraiHuanLuyen">Ngày Kết Thúc Trại</label>
+                      <input name="latestNgayKetThucTraiHuanLuyen" className="form-control" type="date"
+                        value={latestNgayKetThucTraiHuanLuyen} onChange={handleInputChange}
+                        disabled={traiHuanLuyenId === 0 || traiHuanLuyenId === ""}
+                      />
+                    </CCol>
+                    
+                  </CRow>    
               </div>
 
             </CTabPanel>

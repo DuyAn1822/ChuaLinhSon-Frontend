@@ -221,6 +221,10 @@ function UserModal({ show, handleClose, user, handleChangeDoanSinh }) {
         newErrors.latestNgayBatDauTraiHuanLuyen = 'Ngày bắt đầu trại huấn luyện là bắt buộc';
         isValid = false;
       }
+      if (!formData.latestNgayKetThucTraiHuanLuyen) {
+        newErrors.latestNgayKetThucTraiHuanLuyen = 'Ngày kết thúc trại huấn luyện là bắt buộc';
+        isValid = false;
+      }
     }
 
     setErrors(newErrors);
@@ -508,10 +512,11 @@ function UserModal({ show, handleClose, user, handleChangeDoanSinh }) {
                     </CCol>
                     <CCol>
                       <label htmlFor="latestNgayKetThucTraiHuanLuyen">Ngày Kết Thúc Trại</label>
-                      <input name="latestNgayKetThucTraiHuanLuyen" className="form-control" type="date"
+                      <input name="latestNgayKetThucTraiHuanLuyen" className={`form-control ${errors.latestNgayKetThucTraiHuanLuyen ? 'is-invalid' : ''}`} type="date"
                         value={formData.latestNgayKetThucTraiHuanLuyen} onChange={handleInputChange}
                         readOnly={!isEditing} disabled={!isEditing || !formData.latestTraiHuanLuyenId}
                       />
+                       {errors.latestNgayKetThucTraiHuanLuyen && <div className="invalid-feedback">{errors.latestNgayKetThucTraiHuanLuyen}</div>}
                     </CCol>
                     
                   </CRow>
