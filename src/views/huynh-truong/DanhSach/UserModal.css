@@ -13,10 +13,12 @@
   }
   
   .user-avatar {
-    width: 100px;
-    border-radius: 50%;
+    padding: 5px;
+    width: 150px; 
+    height: 150px; 
+    border-radius: 50%; 
+    object-fit: cover; 
   }
-  
   .user-name, .user-email {
     text-align: center;
     margin: 0;

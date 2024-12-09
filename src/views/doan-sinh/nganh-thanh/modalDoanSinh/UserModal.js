@@ -5,7 +5,7 @@ import {
   CCol, CFormSelect,
   CTabs, CTabList,
   CTabContent, CTabPanel,
-  CTab
+  CTab,CAvatar
 } from '@coreui/react'
 import '../../DoanSinhCss/UserModal.css';
 import Swal from 'sweetalert2';
@@ -345,10 +345,10 @@ function UserModal({ show, handleClose, user, handleChangeDoanSinh }) {
           <CTabContent>
             <CTabPanel className="p-3" itemKey="thongTin">
               <div className="avatar-container">
-                <img width={100}
+              <CAvatar size="xl" 
                   src={selectedFile ? URL.createObjectURL(selectedFile) : (formData.avatar || '')}
                   alt="Avatar"
-                  className="bachoc-avatar"
+                  className="user-avatar"
                 />
                 {isEditing && (
                   <input type="file" onChange={handleFileChange} accept=".jpg,.jpeg,.png" className="form-control mt-2" />

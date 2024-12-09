@@ -6,7 +6,7 @@ import {
   CCol, CFormSelect,
   CTabs, CTabList,
   CTabContent, CTabPanel,
-  CTab
+  CTab,CAvatar
 } from '@coreui/react'
 import './UserModal.css';
 import Swal from 'sweetalert2';
@@ -30,7 +30,8 @@ function UserModal({ show, handleClose, user, handleChangeHuynhTruong }) {
     latestBacHocId: user.lichSuHocs && user.lichSuHocs.length > 0 ? user.lichSuHocs.slice(-1)[0].bacHocId : '',
     latestCapId: user.lichSuCapDTOS && user.lichSuCapDTOS.length > 0 ? user.lichSuCapDTOS.slice(-1)[0].capId : '',
     latestNgayKetThucTraiHuanLuyen: user.lichSuTraiHuanLuyenDTOS && user.lichSuTraiHuanLuyenDTOS.length > 0 ? user.lichSuTraiHuanLuyenDTOS.slice(-1)[0].ngayKetThuc : '',
-    latestNgayKetThucBacHoc: user.lichSuHocs && user.lichSuHocs.length > 0 ? user.lichSuHocs.slice(-1)[0].ngayKetThuc : '',
+    latestNgayBatDauTraiHuanLuyen : user.lichSuTraiHuanLuyenDTOS && user.lichSuTraiHuanLuyenDTOS.length > 0 ? user.lichSuTraiHuanLuyenDTOS.slice(-1)[0].ngayBatDau : '',
+    latestNgayBatDauBacHoc: user.lichSuHocs && user.lichSuHocs.length > 0 ? user.lichSuHocs.slice(-1)[0].ngayKetThuc : '',
     latestNgayKetThucCap: user.lichSuCapDTOS && user.lichSuCapDTOS.length > 0 ? user.lichSuCapDTOS.slice(-1)[0].ngayKetThuc : '',
   });
 
@@ -73,19 +74,73 @@ function UserModal({ show, handleClose, user, handleChangeHuynhTruong }) {
     const fetchTraiHuanLuyen = async () => {
       try {
         const response = await apiClient.get(`/api/trai-huan-luyen`);
-        setTraiHuanLuyenList(response.data.data);
+    
+        if (response.data.status === 'OK') {
+          return response.data.data.filter((trai) => trai.isHuynhTruong); // Lọc các trại không phải Huynh Trưởng
+        } else {
+          console.error('Lỗi khi lấy dữ liệu trại:', response.data.message);
+          return []; // Trả về mảng rỗng nếu API trả lỗi
+        }
       } catch (error) {
-        console.error('Error fetching Bac Hoc:', error);
+        console.error('Error fetching Trại Huấn Luyện:', error);
+        return []; // Trả về mảng rỗng nếu có lỗi
       }
     };
-
-    // console.log(formData);
+    
+    const fetchLichSuTraiHuanLuyen = async () => {
+      try {
+        const response = await axios.get(`/api/lich-su-trai-huan-luyen/ByUserId/${formData.userId}`);
+        console.log('API Response:', response.data);
+        if (response.data.status === 'OK') {
+          return response.data.data; // Trả về dữ liệu lịch sử
+        } else {
+          return null; // Trả về null nếu có lỗi
+        }
+      } catch (error) {
+        return null; // Trả về null nếu có lỗi
+      }
+    };
+    
+    const fetchAndMapTraiHuanLuyen = async () => {
+      try {
+        // Gọi đồng thời hai API
+        const [allTrai, userTraiHistory] = await Promise.all([
+          fetchTraiHuanLuyen(),
+          fetchLichSuTraiHuanLuyen(),
+        ]);
+    
+        // Nếu không có lịch sử hoặc lịch sử rỗng, hiển thị tất cả trại
+        if (!userTraiHistory || Object.keys(userTraiHistory).length === 0) {
+          setTraiHuanLuyenList(allTrai);
+          return;
+        }
+    
+        // Mapping dữ liệu
+        const mappedTraiList = allTrai.map((trai) => {
+          const isCurrent = trai.traiHuanLuyenId === userTraiHistory.traiHuanLuyenId;
+          return {
+            traiHuanLuyenId: trai.traiHuanLuyenId,
+            tenTraiHuanLuyen: trai.tenTraiHuanLuyen,
+            ngayBatDau: isCurrent ? userTraiHistory.ngayBatDau : '',
+            ngayKetThuc: isCurrent ? userTraiHistory.ngayKetThuc : '',
+            isActive: isCurrent ? userTraiHistory.isActive : '',
+          };
+        });
+    
+        // Cập nhật danh sách vào state
+        setTraiHuanLuyenList(mappedTraiList);
+      } catch (error) {
+        // Nếu có lỗi, vẫn hiển thị tất cả trại
+        const allTraiFallback = await fetchTraiHuanLuyen();
+        setTraiHuanLuyenList(allTraiFallback);
+      }
+    };
 
 
     fetchRoles();
     fetchBacHoc();
     fetchCap();
-    fetchTraiHuanLuyen();
+    fetchAndMapTraiHuanLuyen();
   }, []);
 
 
@@ -113,32 +168,24 @@ function UserModal({ show, handleClose, user, handleChangeHuynhTruong }) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
+    setFormData((prevFormData) => {
+      const updatedData = { ...prevFormData, [name]: value };
+      
+      if (name === 'latestBacHocId' && value === '') {
+        updatedData.latestBacHocId = '';
+        updatedData.latestNgayBatDauBacHoc = '';
+      }
+      if (name === 'latestCapId' && value === '') {
+        updatedData.latestCapId='';
+        updatedData.latestNgayKetThucCap='';
+      }
+      if (name === 'latestTraiHuanLuyenId' && value === '') {
+        updatedData.latestTraiHuanLuyenId = '';
+        updatedData.latestNgayKetThucTraiHuanLuyen = '';
+        updatedData.latestNgayBatDauTraiHuanLuyen = '';
+      }
+      return updatedData;
     });
-    // tôi muốn set ngày kết thúc bậc học, cấp, trại huấn luyện thành '' khi giá trị của bậc học, cấp, trại huấn luyện là ''
-    if (name === 'latestBacHocId' && value === '') {
-      setFormData({
-        ...formData,
-        latestBacHocId: '',
-        latestNgayKetThucBacHoc: '',
-      });
-    }
-    if (name === 'latestCapId' && value === '') {
-      setFormData({
-        ...formData,
-        latestCapId: '',
-        latestNgayKetThucCap: '',
-      });
-    }
-    if (name === 'latestTraiHuanLuyenId' && value === '') {
-      setFormData({
-        ...formData,
-        latestTraiHuanLuyenId: '',
-        latestNgayKetThucTraiHuanLuyen: '',
-      });
-    }
     setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
   };
 
@@ -168,8 +215,8 @@ function UserModal({ show, handleClose, user, handleChangeHuynhTruong }) {
     }
     // Bắt buộc chọn "Ngày kết thúc bậc học" nếu đã chọn "Bậc học"
     if (formData.latestBacHocId) {
-      if (!formData.latestNgayKetThucBacHoc) {
-        newErrors.ngayKetThucBacHoc = 'Ngày kết thúc bậc học là bắt buộc';
+      if (!formData.latestNgayBatDauBacHoc) {
+        newErrors.latestNgayBatDauBacHoc = 'Ngày bắt đầu bậc học là bắt buộc';
         isValid = false;
       }
     }
@@ -183,8 +230,12 @@ function UserModal({ show, handleClose, user, handleChangeHuynhTruong }) {
     }
 
     if (formData.latestTraiHuanLuyenId) {
+      if (!formData.latestNgayBatDauTraiHuanLuyen) {
+        newErrors.latestNgayBatDauTraiHuanLuyen = 'Ngày bắt đầu trại huấn luyện là bắt buộc';
+        isValid = false;
+      }
       if (!formData.latestNgayKetThucTraiHuanLuyen) {
-        newErrors.ngayKetThucTraiHuanLuyen = 'Ngày kết thúc trại huấn luyện là bắt buộc';
+        newErrors.latestNgayKetThucTraiHuanLuyen = 'Ngày kết thúc trại huấn luyện là bắt buộc';
         isValid = false;
       }
     }
@@ -218,7 +269,6 @@ function UserModal({ show, handleClose, user, handleChangeHuynhTruong }) {
         hoTen: formData.hoTen,
         ngaySinh: formData.ngaySinh,
         sdt: formData.sdt,
-        email: formData.email,
         phapDanh: formData.phapDanh,
         gioiTinh: formData.gioiTinh,
         createdDate: formData.createdDate, // Giữ nguyên ngày tạo
@@ -237,7 +287,7 @@ function UserModal({ show, handleClose, user, handleChangeHuynhTruong }) {
           {
             bacHocId: formData.latestBacHocId,
             userId: formData.userId,
-            ngayKetThuc: formData.latestNgayKetThucBacHoc,
+            ngayBatDau: formData.latestNgayBatDauBacHoc,
           },
         ] : null,
         lichSuCapDTOS: formData.latestCapId !== (formData.lichSuCapDTOS && formData.lichSuCapDTOS.length > 0 ? formData.lichSuCapDTOS.slice(-1)[0].capId : '') && formData.latestCapId !== '' ? [
@@ -248,14 +298,20 @@ function UserModal({ show, handleClose, user, handleChangeHuynhTruong }) {
             ngayKetThuc: formData.latestNgayKetThucCap,
           },
         ] : null,
-        lichSuTraiHuanLuyenDTOS: formData.latestTraiHuanLuyenId !== (formData.lichSuTraiHuanLuyenDTOS && formData.lichSuTraiHuanLuyenDTOS.length > 0 ? formData.lichSuTraiHuanLuyenDTOS.slice(-1)[0].ngayKetThuc : '') && formData.latestTraiHuanLuyenId !== '' ? [
-          ...formData.lichSuTraiHuanLuyenDTOS,
-          {
-            traiHuanLuyenId: formData.latestTraiHuanLuyenId,
-            userId: formData.userId,
-            ngayKetThuc: formData.latestNgayKetThucTraiHuanLuyen,
-          },
-        ] : null,
+        lichSuTraiHuanLuyenDTOS: formData.latestTraiHuanLuyenId !== (formData.lichSuTraiHuanLuyenDTOS && 
+          formData.lichSuTraiHuanLuyenDTOS.length > 0 ? formData.lichSuTraiHuanLuyenDTOS.slice(-1)[0].ngayKetThuc : '')
+           
+          && formData.latestTraiHuanLuyenId !== '' ? [
+            ...formData.lichSuTraiHuanLuyenDTOS,
+            {
+              lichSuTraiHuanLuyenId : formData.lichSuTraiHuanLuyenId,
+              traiHuanLuyenId: formData.latestTraiHuanLuyenId, // Trại huấn luyện hiện tại
+              userId: formData.userId, // userId
+              is_active: formData.isActive,
+              ngayKetThuc: formData.latestNgayKetThucTraiHuanLuyen, // Ngày kết thúc trại huấn luyện
+              ngayBatDau: formData.latestNgayBatDauTraiHuanLuyen 
+            },
+          ] : null,
         hoTenCha: formData.hoTenCha,
         hoTenMe: formData.hoTenMe,
         sdtCha: formData.sdtCha,
@@ -314,10 +370,11 @@ function UserModal({ show, handleClose, user, handleChangeHuynhTruong }) {
           <CTabContent>
             <CTabPanel className="p-3" itemKey="thongTin">
               <div className="avatar-container">
-                <img width={100}
+       
+                <CAvatar size="xl" 
                   src={selectedFile ? URL.createObjectURL(selectedFile) : (formData.avatar || '')}
                   alt="Avatar"
-                  className="bachoc-avatar"
+                  className="user-avatar"
                 />
                 {isEditing && (
                   <input type="file" onChange={handleFileChange} accept=".jpg,.jpeg,.png" className="form-control mt-2" />
@@ -473,11 +530,11 @@ function UserModal({ show, handleClose, user, handleChangeHuynhTruong }) {
                   ))}
                 </CFormSelect>
 
-                <label htmlFor="latestNgayKetThucBacHoc">Ngày Kết Thúc Bậc Học</label>
-                <input name="latestNgayKetThucBacHoc" className={`form-control ${errors.ngayKetThucBacHoc ? 'is-invalid' : ''}`} type="date"
-                  value={formData.latestNgayKetThucBacHoc} onChange={handleInputChange}
+                <label htmlFor="latestNgayBatDauBacHoc">Ngày Bắt Đầu Bậc Học</label>
+                <input name="latestNgayBatDauBacHoc" className={`form-control ${errors.latestNgayBatDauBacHoc ? 'is-invalid' : ''}`} type="date"
+                  value={formData.latestNgayBatDauBacHoc} onChange={handleInputChange}
                   readOnly={!isEditing} disabled={!isEditing || formData.latestBacHocId === '' || formData.latestBacHocId === null} />
-                {errors.ngayKetThucBacHoc && <div className="invalid-feedback">{errors.ngayKetThucBacHoc}</div>}
+                {errors.latestNgayBatDauBacHoc && <div className="invalid-feedback">{errors.latestNgayBatDauBacHoc}</div>}
 
                 <label htmlFor="latestCapId">Cấp</label>
                 <CFormSelect
@@ -494,32 +551,46 @@ function UserModal({ show, handleClose, user, handleChangeHuynhTruong }) {
                   ))}
                 </CFormSelect>
 
-                <label htmlFor="latestNgayKetThucCap">Ngày Kết Thúc Cấp</label>
+                <label htmlFor="latestNgayKetThucCap">Ngày Bắt Đầu Cấp</label>
                 <input name="latestNgayKetThucCap" className={`form-control ${errors.ngayKetThucCap ? 'is-invalid' : ''}`} type="date"
                   value={formData.latestNgayKetThucCap} onChange={handleInputChange}
                   readOnly={!isEditing} disabled={!isEditing || formData.latestCapId === '' || formData.latestCapId === null} />
                 {errors.ngayKetThucCap && <div className="invalid-feedback">{errors.ngayKetThucCap}</div>}
 
-                <label htmlFor="latestTraiHuanLuyenId">Trại Huấn Luyện</label>
-                <CFormSelect
-                  name="latestTraiHuanLuyenId"
-                  value={formData.latestTraiHuanLuyenId}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                >
-                  <option value="">Chọn trại huấn luyện</option>
-                  {traiHuanLuyenList.map((trai) => (
-                    <option key={trai.traiHuanLuyenId} value={trai.traiHuanLuyenId}>
-                      {trai.tenTraiHuanLuyen}
-                    </option>
-                  ))}
-                </CFormSelect>
 
-                <label htmlFor="latestNgayKetThucTraiHuanLuyen">Ngày Kết Thúc Trại Huấn Luyện</label>
-                <input name="latestNgayKetThucTraiHuanLuyen" className={`form-control ${errors.ngayKetThucTraiHuanLuyen ? 'is-invalid' : ''}`} type="date"
-                  value={formData.latestNgayKetThucTraiHuanLuyen} onChange={handleInputChange}
-                  readOnly={!isEditing} disabled={!isEditing || formData.latestTraiHuanLuyenId === '' || formData.latestTraiHuanLuyenId === null} />
-                {errors.ngayKetThucTraiHuanLuyen && <div className="invalid-feedback">{errors.ngayKetThucTraiHuanLuyen}</div>}
+                <label htmlFor="latestTraiHuanLuyenId">Trại Huấn Luyện</label>
+                  <CFormSelect
+                    name="latestTraiHuanLuyenId" value={formData.latestTraiHuanLuyenId}
+                    onChange={handleInputChange} disabled={!isEditing}
+                  >
+                    <option value="">Chọn trại huấn luyện</option>
+                    {traiHuanLuyenList.map((trai) => (
+                      <option key={trai.traiHuanLuyenId} value={trai.traiHuanLuyenId}>
+                        {trai.tenTraiHuanLuyen}
+                      </option>
+                    ))}
+                  </CFormSelect>
+
+                  <CRow xs={{ gutterX: 5 }}>
+                    <CCol>
+                      <label htmlFor="latestNgayBatDauTraiHuanLuyen">Ngày Bắt Đầu Trại</label>
+                      <input name="latestNgayBatDauTraiHuanLuyen" className={`form-control ${errors.latestNgayBatDauTraiHuanLuyen ? 'is-invalid' : ''}`} type="date"
+                        value={formData.latestNgayBatDauTraiHuanLuyen} onChange={handleInputChange}
+                        readOnly={!isEditing} disabled={!isEditing || !formData.latestTraiHuanLuyenId}
+                      />
+                      {errors.latestNgayBatDauTraiHuanLuyen && <div className="invalid-feedback">{errors.latestNgayBatDauTraiHuanLuyen}</div>}
+                    </CCol>
+                    <CCol>
+                      <label htmlFor="latestNgayKetThucTraiHuanLuyen">Ngày Kết Thúc Trại</label>
+                      <input name="latestNgayKetThucTraiHuanLuyen" className={`form-control ${errors.latestNgayKetThucTraiHuanLuyen ? 'is-invalid' : ''}`} type="date"
+                        value={formData.latestNgayKetThucTraiHuanLuyen} onChange={handleInputChange}
+                        readOnly={!isEditing} disabled={!isEditing || !formData.latestTraiHuanLuyenId}
+                      />
+                       {errors.latestNgayKetThucTraiHuanLuyen && <div className="invalid-feedback">{errors.latestNgayKetThucTraiHuanLuyen}</div>}
+                    </CCol>
+                    
+                  </CRow>
+
 
               </div>
             </CTabPanel>

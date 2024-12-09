@@ -16,7 +16,6 @@ function AddHuynhTruongModal({ show, handleClose, onAddHuynhTruong }) {
   const [role1, setRole1] = useState('');
   const [role2, setRole2] = useState('');
   const [phapdanh, setPhapdanh] = useState('');
-  const [email, setEmail] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [noiSinh, setNoiSinh] = useState('');
   const [registered, setRegistered] = useState('');
@@ -117,9 +116,6 @@ function AddHuynhTruongModal({ show, handleClose, onAddHuynhTruong }) {
         break;
       case 'phapdanh':
         setPhapdanh(value);
-        break;
-      case 'email':
-        setEmail(value);
         break;
       case 'birthDate':
         setBirthDate(value);
@@ -252,7 +248,6 @@ function AddHuynhTruongModal({ show, handleClose, onAddHuynhTruong }) {
       noiSinh: noiSinh,
       sdtCha: sdtCha,
       sdtMe: sdtMe,
-      email: email,
       phapDanh: phapdanh,
       gioiTinh: gender === 'Male', // true for Male, false for Female
       createdDate: registered,
@@ -325,7 +320,6 @@ function AddHuynhTruongModal({ show, handleClose, onAddHuynhTruong }) {
       setRole1('');
       setRole2('');
       setPhapdanh('');
-      setEmail('');
       setBirthDate('');
       setRegistered('');
       setPhone('');
@@ -403,13 +397,6 @@ function AddHuynhTruongModal({ show, handleClose, onAddHuynhTruong }) {
                 <input
                   name="phapdanh" className="form-control"
                   type="text" value={phapdanh}
-                  onChange={handleInputChange}
-                />
-
-                <label htmlFor="email">Email</label>
-                <input
-                  name="email" className="form-control"
-                  type="email" value={email}
                   onChange={handleInputChange}
                 />
 

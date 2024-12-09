@@ -366,7 +366,6 @@ function InsertModal({ show, handleClose, onAddDoanSinh }) {
       fileInputRef.current.value = null;
       setBacHoc(0);
       setBacHocList([]);
-      setNgayKetThucBacHoc('');
       setCapList([]);
       setCapId(0);
       setNgayBatDauBacHoc('');
