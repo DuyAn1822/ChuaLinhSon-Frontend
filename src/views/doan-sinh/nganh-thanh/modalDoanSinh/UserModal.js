@@ -25,7 +25,7 @@ function UserModal({ show, handleClose, user, handleChangeDoanSinh }) {
     latestBacHocId: user.lichSuHocs && user.lichSuHocs.length > 0 ? user.lichSuHocs.slice(-1)[0].bacHocId : '',
     latestNgayKetThucTraiHuanLuyen: user.lichSuTraiHuanLuyenDTOS && user.lichSuTraiHuanLuyenDTOS.length > 0 ? user.lichSuTraiHuanLuyenDTOS.slice(-1)[0].ngayKetThuc : '',
     latestNgayBatDauTraiHuanLuyen : user.lichSuTraiHuanLuyenDTOS && user.lichSuTraiHuanLuyenDTOS.length > 0 ? user.lichSuTraiHuanLuyenDTOS.slice(-1)[0].ngayBatDau : '',
-    latestNgayBatDauBacHoc: user.lichSuHocs && user.lichSuHocs.length > 0 ? user.lichSuHocs.slice(-1)[0].ngayKetThuc : '',
+    latestNgayBatDauBacHoc: user.lichSuHocs && user.lichSuHocs.length > 0 ? user.lichSuHocs.slice(-1)[0].ngayBatDau : '',
   });
 
   const [errors, setErrors] = useState({});
@@ -103,7 +103,7 @@ function UserModal({ show, handleClose, user, handleChangeDoanSinh }) {
           fetchTraiHuanLuyen(),
           fetchLichSuTraiHuanLuyen(),
         ]);
-    
+      
         // Nếu không có lịch sử hoặc lịch sử rỗng, hiển thị tất cả trại
         if (!userTraiHistory || Object.keys(userTraiHistory).length === 0) {
           setTraiHuanLuyenList(allTrai);
@@ -121,7 +121,7 @@ function UserModal({ show, handleClose, user, handleChangeDoanSinh }) {
             isActive: isCurrent ? userTraiHistory.isActive : '',
           };
         });
-    
+       
         // Cập nhật danh sách vào state
         setTraiHuanLuyenList(mappedTraiList);
       } catch (error) {
@@ -267,7 +267,9 @@ function UserModal({ show, handleClose, user, handleChangeDoanSinh }) {
         accountDTO: formData.accountDTO,
         nhiemKyDoans: formData.nhiemKyDoans,
         doanSinhDetails: formData.doanSinhDetails,
-        lichSuHocs: formData.latestBacHocId !== (formData.lichSuHocs && formData.lichSuHocs.length > 0 ? formData.lichSuHocs.slice(-1)[0].bacHocId : '') && formData.latestBacHocId !== '' ? [
+
+        lichSuHocs: formData.latestBacHocId !== (formData.lichSuHocs &&
+          formData.lichSuHocs.length > 0 ? formData.lichSuHocs.slice(-1)[0].latestBacHocId : '') && formData.ngayBatDau !== '' ? [
           ...formData.lichSuHocs,
           {
             bacHocId: formData.latestBacHocId,
@@ -296,7 +298,7 @@ function UserModal({ show, handleClose, user, handleChangeDoanSinh }) {
         sdtMe: formData.sdtMe,
         noiSinh: formData.noiSinh,
       };
-      //  console.log('Update data:', updateData);
+       //console.log('Update data:', updateData);
       const response = await apiClient.put(`/api/users/${updateData.userId}`, updateData,);
       if (selectedFile) {
         const formData = new FormData();

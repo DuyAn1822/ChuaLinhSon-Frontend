@@ -318,7 +318,6 @@ const DSNganhThanh = () => {
     <label width={'5%'} className="fixed-width-column d-block w-100 m-0">Ảnh</label>,
     <label width={'25%'} className="fixed-width-column d-block w-100 m-0">Tên || Pháp Danh</label>,
     <label width={'25%'} className="fixed-width-column d-block w-100 m-0">Chức vụ</label>,
-    <label width={'20%'} className="fixed-width-column d-block w-100 m-0">Vai trò</label>,
     <label width={'15%'} className="fixed-width-column d-block w-100 m-0">Trạng thái</label>,
     <label width={'10%'} className="fixed-width-column d-block w-100 m-0">Thao tác</label>,
   ];
@@ -347,7 +346,6 @@ const DSNganhThanh = () => {
       <CTableDataCell>
         <div>{user.hoTen} || {user.phapDanh}</div>
       </CTableDataCell>
-      <CTableDataCell>{user.roleId1 ? user.roleId1.roleName : 'Chưa có vai trò'}</CTableDataCell>
       <CTableDataCell>{user.doanSinhDetails ? user.doanSinhDetails.slice(-1)[0].role : 'Chưa có vai trò'}</CTableDataCell>
       <CTableDataCell>
         <CBadge id='custom-badge' className={user.doanSinhDetails.slice(-1)[0].isActive ? 'custom-badge-success' : 'custom-badge-danger'}>
